@@ -6,7 +6,10 @@ import tech.backend.magalums.entity.Notification;
 import tech.backend.magalums.entity.Status;
 import tech.backend.magalums.repository.NotificationRepository;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 @Service
 public class NotificationService {
@@ -32,5 +35,23 @@ public class NotificationService {
             notification.get().setStatus(Status.Values.CANCELED.toStatus());
             notificationRepository.save(notification.get());
         }
+    }
+
+    public void checkAndSend(LocalDateTime dateTime) {
+       var notification = notificationRepository.findByStatusInAndDateTimeBefore(List.of(
+                Status.Values.PENDING.toStatus(),
+                Status.Values.ERROR.toStatus()), dateTime);
+
+       notification.forEach(sendNotification());
+    }
+
+    public Consumer<Notification> sendNotification() {
+        return n -> {
+
+            // TODO - realizar o envio da notificação
+
+            n.setStatus(Status.Values.SUCCESS.toStatus());
+            notificationRepository.save(n);
+        };
     }
 }
