@@ -1,5 +1,6 @@
 package tech.backend.magalums.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tech.backend.magalums.controller.dto.ScheduleNotificationDTO;
 import tech.backend.magalums.entity.Notification;
@@ -14,11 +15,8 @@ import java.util.function.Consumer;
 @Service
 public class NotificationService {
 
-    public final NotificationRepository notificationRepository;
-
-    public NotificationService(NotificationRepository notificationRepository) {
-        this.notificationRepository = notificationRepository;
-    }
+    @Autowired
+    public NotificationRepository notificationRepository;
 
     public void scheduleNotification(ScheduleNotificationDTO dto) {
         notificationRepository.save(dto.toNotification());
